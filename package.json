@@ -1,0 +1,20 @@
+{
+  "name": "intelligent-emergency-corridor",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:server": "npm --prefix apps/server run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:web\"",
+    "build:server": "npm --prefix apps/server run build",
+    "build:web": "npm --prefix apps/web run build",
+    "build": "npm run build:server && npm run build:web",
+    "typecheck": "npm --prefix apps/server run typecheck && npm --prefix apps/web run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

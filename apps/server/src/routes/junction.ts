@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getJunctions, getUpcomingJunctions, alertJunction, updateJunctionStatus, updateJunctionStatusSchema } from '../controllers/junction';
+import { validateRequest } from '../middleware/validate';
+import { authenticate, requireRoles } from '../middleware/auth';
+const router = Router();
+router.use(authenticate);
+router.get('/', requireRoles('CONTROL_ROOM', 'TRAFFIC_OFFICER', 'EMERGENCY_OPERATOR', 'ADMIN'), getJunctions);
+router.get('/upcoming', requireRoles('CONTROL_ROOM', 'TRAFFIC_OFFICER', 'EMERGENCY_OPERATOR', 'ADMIN'), getUpcomingJunctions);
+router.post('/:id/alert', requireRoles('CONTROL_ROOM', 'ADMIN'), alertJunction);
+router.patch('/:id/status', requireRoles('TRAFFIC_OFFICER', 'CONTROL_ROOM', 'ADMIN'), validateRequest(updateJunctionStatusSchema), updateJunctionStatus);
+export default router;

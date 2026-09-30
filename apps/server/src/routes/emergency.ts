@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { createEmergency, getActiveEmergency, getEmergencyById, activateEmergencyMode, deactivateEmergencyMode, createEmergencySchema } from '../controllers/emergency';
+import { validateRequest } from '../middleware/validate';
+import { authenticate, requireRoles } from '../middleware/auth';
+const router = Router();
+router.use(authenticate);
+router.get('/active', requireRoles('EMERGENCY_OPERATOR', 'CONTROL_ROOM', 'TRAFFIC_OFFICER', 'ADMIN'), getActiveEmergency);
+router.get('/:id', requireRoles('CONTROL_ROOM', 'EMERGENCY_OPERATOR', 'TRAFFIC_OFFICER', 'ADMIN'), getEmergencyById);
+router.post('/', requireRoles('EMERGENCY_OPERATOR', 'CONTROL_ROOM', 'ADMIN'), validateRequest(createEmergencySchema), createEmergency);
+router.patch('/:id/activate', requireRoles('EMERGENCY_OPERATOR', 'CONTROL_ROOM', 'ADMIN'), activateEmergencyMode);
+router.patch('/:id/deactivate', requireRoles('EMERGENCY_OPERATOR', 'CONTROL_ROOM', 'ADMIN'), deactivateEmergencyMode);
+export default router;
